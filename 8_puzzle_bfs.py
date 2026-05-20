@@ -1,81 +1,44 @@
+import tkinter as tk
+from tkinter import messagebox
 import random
 from collections import deque
 import copy
 
+# ==========================================
+# CÁC HÀM VÀ LỚP LOGIC CỐT LÕI (GIỮ NGUYÊN)
+# ==========================================
 
-# Node dùng để lưu trạng thái hiện tại
 class Node:
     def __init__(self, state, parent, move, step):
-        self.state = state      # Ma trận hiện tại
-        self.parent = parent    # Node cha
-        self.move = move        # Hành động đã thực hiện
-        self.step = step        # Số bước
+        self.state = state      
+        self.parent = parent    
+        self.move = move        
+        self.step = step        
 
-
-# Tạo ma trận random 3x3
-def create_matrix():
-    matrix = []
-
-    value = [i for i in range(9)]
-
-    for i in range(3):
-        row = []
-
-        for j in range(3):
-            num = random.choice(value)
-
-            row.append(num)
-
-            value.remove(num)
-
-        matrix.append(row)
-
-    return matrix
-
-
-# Kiểm tra đã đạt trạng thái đích chưa
 def check_done(matrix):
     result = [
         [1, 2, 3],
         [6, 5, 4],
         [7, 8, 0]
     ]
-
     return matrix == result
 
-
-# Tìm vị trí ô trống
 def find_empty_position(matrix):
     for i in range(3):
         for j in range(3):
             if matrix[i][j] == 0:
                 return i, j
 
-
-# Lấy các hướng di chuyển hợp lệ
 def possible_move(matrix):
     moves = []
-
     x, y = find_empty_position(matrix)
-
-    if x < 2:
-        moves.append("D")
-
-    if x > 0:
-        moves.append("U")
-
-    if y < 2:
-        moves.append("R")
-
-    if y > 0:
-        moves.append("L")
-
+    if x < 2: moves.append("D")
+    if x > 0: moves.append("U")
+    if y < 2: moves.append("R")
+    if y > 0: moves.append("L")
     return moves
 
-
-# Tránh đi ngược lại bước trước
 def remove_repetition(move, pre_move):
-
     return (
         (move == "U" and pre_move == "D") or
         (move == "D" and pre_move == "U") or
@@ -83,146 +46,169 @@ def remove_repetition(move, pre_move):
         (move == "R" and pre_move == "L")
     )
 
-
-# Thực hiện hành động
 def do_action(matrix, move):
-
-    # Copy ma trận để tránh sửa trực tiếp state cũ
     new_matrix = copy.deepcopy(matrix)
-
     x, y = find_empty_position(new_matrix)
-
     if move == "U":
         new_matrix[x][y], new_matrix[x - 1][y] = new_matrix[x - 1][y], new_matrix[x][y]
-
     elif move == "D":
         new_matrix[x][y], new_matrix[x + 1][y] = new_matrix[x + 1][y], new_matrix[x][y]
-
     elif move == "L":
         new_matrix[x][y], new_matrix[x][y - 1] = new_matrix[x][y - 1], new_matrix[x][y]
-
     elif move == "R":
         new_matrix[x][y], new_matrix[x][y + 1] = new_matrix[x][y + 1], new_matrix[x][y]
-
     return new_matrix
 
-
-# Chuyển ma trận sang tuple để lưu vào set
 def matrix_to_tuple(matrix):
     return tuple(tuple(row) for row in matrix)
 
-
-# Truy vết đường đi từ node đích về node gốc
 def solution(node):
-
     result = []
-
     while node is not None:
         result.append(node)
-
         node = node.parent
-
-    # Đảo ngược để in từ đầu -> cuối
     result.reverse()
-
     return result
 
-
-# Thuật toán BFS
 def bfs(node, frontier, explored):
-
-    # Nếu trạng thái đầu đã là đích
     if check_done(node.state):
         return solution(node)
-
-    # Đưa node đầu vào hàng đợi
+    
     frontier.append(node)
-
-    # Đánh dấu đã thăm
     explored.add(matrix_to_tuple(node.state))
-
-    # Khi frontier còn phần tử
+    
     while frontier:
-
-        # BFS lấy phần tử đầu hàng đợi
         u = frontier.popleft()
-
-        # Lấy các hướng di chuyển
         moves = possible_move(u.state)
-
+        
         for move in moves:
-
-            # Tránh đi ngược lại
             if u.move is not None:
                 if remove_repetition(move, u.move):
                     continue
-
-            # Tạo trạng thái mới
+            
             new_state = do_action(u.state, move)
-
             state_tuple = matrix_to_tuple(new_state)
-
-            # Nếu chưa thăm
+            
             if state_tuple not in explored:
-
-                # Tạo node con
-                child = Node(
-                    new_state,
-                    u,
-                    move,
-                    u.step + 1
-                )
-
-                # Nếu là đích
+                child = Node(new_state, u, move, u.step + 1)
+                
                 if check_done(child.state):
                     return solution(child)
-
-                # Thêm vào frontier
+                
                 frontier.append(child)
-
-                # Đánh dấu đã thăm
                 explored.add(state_tuple)
-
+                
     return "Failure"
 
+# ==========================================
+# LỚP GIAO DIỆN ĐỒ HỌA TKINTER
+# ==========================================
 
-# In ma trận
-def print_matrix(matrix):
+class PuzzleGUI:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("8-Puzzle Solver (Thuật toán BFS)")
+        self.matrix = self.create_matrix()
+        
+        # Khung chứa ma trận
+        self.frame = tk.Frame(self.root)
+        self.frame.pack(pady=20)
+        
+        # Lưới các ô vuông (Labels)
+        self.tiles = [[None for _ in range(3)] for _ in range(3)]
+        for i in range(3):
+            for j in range(3):
+                self.tiles[i][j] = tk.Label(self.frame, text="", font=("Helvetica", 32, "bold"), 
+                                            width=4, height=2, borderwidth=2, relief="groove")
+                self.tiles[i][j].grid(row=i, column=j, padx=5, pady=5)
+        
+        # Nhãn hiển thị trạng thái
+        self.status_label = tk.Label(self.root, text="Sẵn sàng", font=("Helvetica", 14))
+        self.status_label.pack(pady=10)
+        
+        # Khung chứa nút bấm
+        self.btn_frame = tk.Frame(self.root)
+        self.btn_frame.pack(pady=10)
+        
+        self.solve_btn = tk.Button(self.btn_frame, text="Giải tự động (BFS)", font=("Helvetica", 12), command=self.solve)
+        self.solve_btn.grid(row=0, column=0, padx=10)
+        
+        self.new_btn = tk.Button(self.btn_frame, text="Tạo bài mới", font=("Helvetica", 12), command=self.new_game)
+        self.new_btn.grid(row=0, column=1, padx=10)
+        
+        self.update_ui()
 
-    for row in matrix:
-        print(row)
+    def create_matrix(self):
+        value = [i for i in range(9)]
+        matrix = []
+        for i in range(3):
+            row = []
+            for j in range(3):
+                num = random.choice(value)
+                row.append(num)
+                value.remove(num)
+            matrix.append(row)
+        return matrix
 
-    print()
+    def update_ui(self):
+        # Cập nhật hiển thị dựa trên trạng thái ma trận hiện tại
+        for i in range(3):
+            for j in range(3):
+                val = self.matrix[i][j]
+                if val == 0:
+                    self.tiles[i][j].config(text="", bg="#d3d3d3") # Ô trống màu xám nhạt
+                else:
+                    self.tiles[i][j].config(text=str(val), bg="#add8e6") # Các ô số màu xanh nhạt
 
+    def new_game(self):
+        # Tạo ma trận mới và kích hoạt lại các nút
+        self.matrix = self.create_matrix()
+        self.update_ui()
+        self.status_label.config(text="Sẵn sàng")
+        self.solve_btn.config(state=tk.NORMAL)
+
+    def solve(self):
+        # Khóa nút bấm tránh click nhiều lần
+        self.solve_btn.config(state=tk.DISABLED)
+        self.new_btn.config(state=tk.DISABLED)
+        self.status_label.config(text="Đang tìm kiếm đường đi (UI có thể hơi lag nhẹ)...")
+        self.root.update() # Ép giao diện cập nhật text ngay lập tức
+        
+        # Thiết lập BFS
+        node = Node(self.matrix, None, None, 0)
+        frontier = deque()
+        explored = set()
+        
+        result = bfs(node, frontier, explored)
+        
+        if result == "Failure":
+            messagebox.showinfo("Kết quả", "Không tìm thấy lời giải cho trạng thái này!")
+            self.solve_btn.config(state=tk.NORMAL)
+            self.new_btn.config(state=tk.NORMAL)
+            self.status_label.config(text="Không có lời giải")
+        else:
+            # Bắt đầu chạy hiệu ứng
+            self.animate_solution(result)
+
+    def animate_solution(self, steps, index=0):
+        if index < len(steps):
+            self.matrix = steps[index].state
+            self.update_ui()
+            
+            move_text = steps[index].move if steps[index].move else "Bắt đầu"
+            self.status_label.config(text=f"Bước: {steps[index].step} | Nước đi: {move_text}")
+            
+            # Đợi 400ms rồi tiếp tục hiển thị bước tiếp theo
+            self.root.after(400, self.animate_solution, steps, index + 1)
+        else:
+            self.solve_btn.config(state=tk.NORMAL)
+            self.new_btn.config(state=tk.NORMAL)
+            self.status_label.config(text="Đã hoàn thành!", fg="green")
 
 if __name__ == "__main__":
-
-    matrix = create_matrix()
-
-    print("Trang thai ban dau:\n")
-
-    print_matrix(matrix)
-
-    node = Node(matrix, None, None, 0)
-
-    # Queue cho BFS
-    frontier = deque()
-
-    # Set lưu trạng thái đã thăm
-    explored = set()
-
-    result = bfs(node, frontier, explored)
-
-    if result == "Failure":
-        print("Khong tim thay loi giai")
-
-    else:
-
-        print("====== KET QUA ======\n")
-
-        for node in result:
-
-            print("Move:", node.move)
-            print("Step:", node.step)
-
-            print_matrix(node.state)
+    # Khởi tạo cửa sổ Tkinter
+    root = tk.Tk()
+    app = PuzzleGUI(root)
+    # Không cho phép thay đổi kích thước cửa sổ để UI ổn định
+    root.resizable(False, False)
+    root.mainloop()
