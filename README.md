@@ -37,24 +37,20 @@ Các thuật toán được tổ chức theo từng nhóm để thuận tiện c
 
 * Breadth First Search (BFS)
 * Depth First Search (DFS)
-* Depth Limited Search (DLS)
-* Iterative Deepening DFS (IDDFS)
+* Iterative Deepening DFS (IDS)
 * Uniform Cost Search (UCS)
-* Bidirectional Search
 
 #### Nhóm Informed Search (Tìm kiếm có thông tin)
 
 * Greedy Best First Search
 * A*
 * Iterative Deepening A* (IDA*)
-* Recursive Best First Search (RBFS)
 
 #### Nhóm Local Search
 
 * Hill Climbing
 * Simulated Annealing
 * Local Beam Search
-* Genetic Algorithm
 
 #### Nhóm Adversarial Search
 
