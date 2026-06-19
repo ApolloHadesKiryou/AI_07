@@ -78,9 +78,6 @@ Repository lưu trữ các báo cáo thực hành theo từng buổi học:
 
 * Báo cáo lý thuyết.
 * Mô tả thuật toán.
-* Phân tích độ phức tạp.
-* Kết quả thực nghiệm.
-* So sánh và đánh giá.
 
 ---
 
@@ -110,8 +107,8 @@ AI_07/
 │   └── Belief State và AND-OR Search
 │
 ├── reports/
-│   ├── report_week_01/
-│   ├── report_week_02/
+│   ├── Week_2_Session_1
+│   ├── Week_2_Session_2
 │   └── ...
 │
 └── README.md
