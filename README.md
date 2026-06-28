@@ -1,114 +1,105 @@
-# AI_07 - Artificial Intelligence Search Algorithms
+# AI Search Algorithms - 8-Puzzle Solver
 
 ## Giới thiệu
 
-**AI_07** là repository phục vụ cho môn học **Trí tuệ nhân tạo (Artificial Intelligence)** của lớp **AI_07**.
+Repository này lưu trữ mã nguồn cho dự án môn học **Trí tuệ nhân tạo (Artificial Intelligence)**. Dự án tập trung vào việc cài đặt, minh họa và so sánh các thuật toán tìm kiếm phổ biến trong AI thông qua bài toán **8-Puzzle**, kết hợp với giao diện đồ họa trực quan (GUI) hiển thị quá trình tìm kiếm và các bước giải chi tiết.
 
-Dự án tập trung vào việc cài đặt, minh họa và so sánh các thuật toán tìm kiếm thường gặp trong AI thông qua bài toán **8-Puzzle**, kết hợp với giao diện đồ họa giúp trực quan hóa quá trình tìm kiếm và lời giải.
-
-Repository được xây dựng nhằm mục đích:
-
-* Học tập và nghiên cứu các thuật toán tìm kiếm AI.
-* Minh họa hoạt động của từng thuật toán trên cùng một bài toán.
-* So sánh hiệu năng giữa các thuật toán.
-* Lưu trữ báo cáo và tài liệu thực hành theo từng buổi học.
+### Mục tiêu của dự án:
+* Cài đặt và mô phỏng trực quan các thuật toán tìm kiếm AI trên cùng một bài toán cơ sở.
+* So sánh hiệu năng thực tế (số bước đi, số trạng thái đã mở rộng/duyệt) giữa các giải thuật.
+* Tổ chức mã nguồn khoa học, tự chủ và hỗ trợ chạy độc lập từ một tệp duy nhất để thuận tiện cho việc đánh giá.
 
 ---
 
-## Nội dung repository
+## Các nhóm thuật toán hỗ trợ (Tổng số 23 thuật toán)
 
-### 1. Chương trình tổng hợp
+Chương trình tích hợp toàn bộ các nhóm thuật toán sau:
 
-Thư mục chính chứa chương trình tích hợp:
-
-* Giao diện đồ họa (GUI).
-* Bài toán 8-Puzzle.
-* Danh sách các thuật toán tìm kiếm.
-* Hiển thị đường đi lời giải.
-* Thống kê số bước, số node đã duyệt và thời gian thực thi.
-
----
-
-### 2. Các nhóm thuật toán
-
-Các thuật toán được tổ chức theo từng nhóm để thuận tiện cho việc học tập và nghiên cứu.
-
-#### Nhóm Uninformed Search (Tìm kiếm không có thông tin)
-
-* Breadth First Search (BFS)
-* Depth First Search (DFS)
-* Iterative Deepening DFS (IDS)
+### 1. Nhóm Tìm kiếm mù (Uninformed Search)
+* Breadth-First Search (BFS)
+* Depth-First Search (DFS)
+* Iterative Deepening Search (IDS)
 * Uniform Cost Search (UCS)
 
-#### Nhóm Informed Search (Tìm kiếm có thông tin)
-
-* Greedy Best First Search
-* A*
+### 2. Nhóm Tìm kiếm có thông tin (Informed Search)
+* Greedy Best-First Search
+* A* Search
 * Iterative Deepening A* (IDA*)
 
-#### Nhóm Local Search
-
-* Hill Climbing
+### 3. Nhóm Tìm kiếm tối ưu cục bộ (Local Search)
+* Hill Climbing (Simple, Steepest-Ascent, Stochastic, Random Restart)
 * Simulated Annealing
 * Local Beam Search
 
-#### Nhóm Adversarial Search
-
+### 4. Nhóm Tìm kiếm đối kháng & Xác suất (Adversarial & Expectimax Search)
 * Minimax
 * Alpha-Beta Pruning
 * Expectimax
 
-#### Nhóm CSP (Constraint Satisfaction Problem)
-
-* Backtracking Search
+### 5. Nhóm Bài toán thỏa mãn ràng buộc (CSP)
+* Backtracking
 * Forward Checking
-* AC-3
+* Arc Consistency (AC-3)
 * Min-Conflicts
 
-#### Nhóm Belief State / AND-OR Search
-
+### 6. Nhóm Môi trường mù & Đồ thị đặc biệt
+* Belief State Search (Belief A*)
 * AND-OR Graph Search
-* Belief State Search
+* Tác nhân phản xạ (Simple Reflex, Model-based Reflex)
 
 ---
 
-### 3. Báo cáo
-
-Repository lưu trữ các báo cáo thực hành theo từng buổi học:
-
-* Báo cáo lý thuyết.
-* Mô tả thuật toán.
-
----
-
-## Cấu trúc thư mục dự kiến
+## Cấu trúc thư mục thực tế
 
 ```text
-AI_07/
+Tri tue nhan tao/
 │
-├── 24110337_LyDongThinh : file main gồm code tổng
+├── main.py                     # Chương trình chính tích hợp giao diện GUI và 23 thuật toán (chạy độc lập)
 │
-├── uninformed_search/
-│   └── Các thuật toán tìm kiếm không thông tin
+├── uniformed_search/           # Các thuật toán tìm kiếm không thông tin (BFS, DFS, IDS, UCS)
+│   ├── bfs.py
+│   ├── dfs.py
+│   ├── ids.py
+│   └── ucs.py
 │
-├── informed_search/
-│   └── Các thuật toán tìm kiếm có thông tin
+├── informed_search/            # Các thuật toán tìm kiếm có thông tin (Greedy, A*, IDA*)
+│   ├── a_star.py
+│   ├── greedy_search.py
+│   └── ida_star.py
 │
-├── local_search/
-│   └── Các thuật toán tìm kiếm cục bộ
+├── local_search/               # Các thuật toán tìm kiếm cục bộ và tối ưu hóa
+│   ├── simple_hill_climbing.py
+│   ├── steepest_hill_climbing.py
+│   ├── stochastic_hill_climbing.py
+│   ├── random_restart.py
+│   ├── simulated_annealing.py
+│   └── local_beam.py
 │
-├── adversarial_search/
-│   └── Minimax, Alpha-Beta, Expectimax
+├── adversarial_search/         # Các thuật toán đối kháng và trò chơi (Minimax, Alpha-Beta, Expectimax)
+│   ├── minimax.py
+│   ├── alpha_beta.py
+│   └── expectimax.py
 │
-├── csp/
-│   └── Constraint Satisfaction Problems
+├── csp/                        # Các thuật toán thỏa mãn ràng buộc
+│   ├── backtracking.py
+│   ├── forward_checking.py
+│   ├── ac3.py
+│   └── min_conflicts.py
 │
-├── belief_search/
-│   └── Belief State và AND-OR Search
+├── belief_search/              # Belief State và AND-OR Search
+│   ├── belief_state_astar.py
+│   └── and_or_graph_search.py
 │
-├── reports/
-│   ├── Week_2_Session_1
-│   ├── Week_2_Session_2
+├── reflex_agents/              # Tác nhân phản xạ đơn giản và có mô hình
+│   ├── simple_reflex.py
+│   └── model_based_reflex.py
+│
+├── common/                     # Tiện ích chung cho 8-Puzzle
+│   ├── node.py
+│   ├── puzzle_utils.py
+│   └── heuristic.py
+│
+├── reports/                    # Báo cáo thực hành từng buổi học
 │   └── ...
 │
 └── README.md
@@ -118,43 +109,30 @@ AI_07/
 
 ## Công nghệ sử dụng
 
-* Python 3
-* Tkinter (GUI)
-* Queue / Priority Queue
-* Các cấu trúc dữ liệu phục vụ AI Search
+* **Ngôn ngữ**: Python 3
+* **Giao diện**: Thư viện Tkinter (GUI mặc định của Python)
+* **Cấu trúc dữ liệu**: Queue, Priority Queue, Deque, Dict/Set Hashable
 
 ---
 
 ## Bài toán minh họa
 
-Toàn bộ thuật toán được minh họa trên bài toán **8-Puzzle**.
-
-Mục tiêu là đưa trạng thái ban đầu về trạng thái đích bằng cách di chuyển ô trống theo các hướng hợp lệ:
+Dự án sử dụng bài toán **8-Puzzle** làm mô hình mẫu. Mục tiêu là đưa ma trận 3x3 ban đầu về cấu hình đích bằng các bước trượt ô trống (ký hiệu là `0`):
 
 ```text
 Trạng thái đích:
-
-1 2 3
-4 5 6
-7 8 0
+1  2  3
+4  5  6
+7  8  0
 ```
 
-Trong đó `0` biểu diễn ô trống.
-
 ---
 
-## Mục tiêu học tập
+## Hướng dẫn sử dụng
 
-Thông qua dự án này, sinh viên có thể:
-
-* Hiểu nguyên lý hoạt động của các thuật toán tìm kiếm AI.
-* So sánh ưu nhược điểm của từng thuật toán.
-* Thực hành xây dựng ứng dụng AI đơn giản bằng Python.
-* Nắm được cách biểu diễn trạng thái và không gian tìm kiếm.
-* Rèn luyện kỹ năng tổ chức dự án và viết báo cáo kỹ thuật.
-
----
-
-## Thành viên
-
-Repository được phát triển và sử dụng cho mục đích học tập của lớp **AI_07**.
+### Chạy chương trình chính (GUI tích hợp đầy đủ):
+Để khởi chạy ứng dụng GUI mô phỏng trực quan tất cả 23 thuật toán trên, chỉ cần thực thi duy nhất tệp `main.py`:
+```bash
+python main.py
+```
+*Lưu ý: Tệp `main.py` được thiết kế tự chủ hoàn toàn, không phụ thuộc vào bất kỳ tệp cục bộ nào ngoài các thư viện mặc định của Python.*
